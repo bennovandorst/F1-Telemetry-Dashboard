@@ -9,14 +9,8 @@ export default function useAuth() {
     const reconnectTimeoutRef = useRef(null);
     const navigate = useNavigate();
 
-    const [speed, setSpeed] = useState(null);
     const [telemetry, setTelemetry] = useState(null);
     const [alert, setAlert] = useState(null);
-
-    const speedRef = useRef(null);
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
 
     const connect = (simrigId) => () => {
         clearTimeout(reconnectTimeoutRef.current);
@@ -54,14 +48,6 @@ export default function useAuth() {
 
                 if (data?.telemetry) {
                     setTelemetry(data.telemetry);
-
-                    if (
-                        typeof data.telemetry.speed === "number" &&
-                        data.telemetry.speed !== speedRef.current
-                    ) {
-                        console.log("Updating speed from", speedRef.current, "to", data.telemetry.speed);
-                        setSpeed(data.telemetry.speed);
-                    }
                 }
             } catch (error) {
                 console.error("Error parsing WebSocket message:", error);
@@ -100,5 +86,5 @@ export default function useAuth() {
         }
     };
 
-    return { connected, connect, disconnect, speed, telemetry, alert };
+    return { connected, connect, disconnect, telemetry, alert };
 }
