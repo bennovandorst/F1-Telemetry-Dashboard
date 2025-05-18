@@ -24,8 +24,24 @@ jobs:
       - name: Make Windows build
         run: npm run make
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Get version from package.json
+        id: get_version
+        run: echo "version=v$(node -p \"require('./package.json').version\")" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
         with:
-          name: windows-build
-          path: out/make/squirrel.windows/x64/*.exe
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: Release ${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: out/make/squirrel.windows/x64/*.exe
+          asset_name: rider-${{ steps.get_version.outputs.version }}.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
