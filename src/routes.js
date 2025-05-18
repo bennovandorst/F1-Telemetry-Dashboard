@@ -22,6 +22,8 @@ import Register from "views/examples/Register.js";
 import Login from "views/examples/Login.js";
 import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
+import CarTelemtery from "./views/examples/CarTelemtery";
+import LapData from "./views/examples/LapData";
 
 var routes = [
   {
@@ -31,6 +33,21 @@ var routes = [
     component: <Index />,
     layout: "/admin",
   },
+  {
+    path: "/car-telemetry",
+    name: "Car Telemetry",
+    icon: "fas fa-car text-blue",
+    component: <CarTelemtery />,
+    layout: "/admin",
+  },
+  {
+    path: "/lap-data",
+    name: "Lap Data",
+    icon: "fas fa-flag-checkered text-black",
+    component: <LapData />,
+    layout: "/admin",
+  },
+  /*
   {
     path: "/icons",
     name: "Icons",
@@ -59,18 +76,18 @@ var routes = [
     component: <Tables />,
     layout: "/admin",
   },
+    {
+    path: "/register",
+    name: "Register",
+    icon: "ni ni-circle-08 text-pink",
+    component: <Register />,
+    layout: "/auth",
+  },*/
   {
     path: "/login",
     name: "Login",
     icon: "ni ni-key-25 text-info",
     component: <Login />,
-    layout: "/auth",
-  },
-  {
-    path: "/register",
-    name: "Register",
-    icon: "ni ni-circle-08 text-pink",
-    component: <Register />,
     layout: "/auth",
   },
 ];

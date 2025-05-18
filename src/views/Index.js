@@ -47,10 +47,14 @@ import {
 } from "variables/charts.js";
 
 import Header from "components/Headers/Header.js";
+import {useSimRigWebSocket} from "../wss";
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);
   const [chartExample1Data, setChartExample1Data] = useState("data1");
+
+  const { telemetry } = useSimRigWebSocket();
+  const simRigId = localStorage.getItem("simRigId");
 
   if (window.Chart) {
     parseOptions(Chart, chartOptions());
@@ -63,7 +67,7 @@ const Index = (props) => {
   };
   return (
       <>
-        <Header />
+        <Header simRigId={simRigId} telemetry={telemetry} />
         {/* Page content */}
         <Container className="mt--7" fluid>
           <Row>

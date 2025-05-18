@@ -22,7 +22,7 @@ import { Row, Col } from "reactstrap";
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer bg-white">
       <Row className="align-items-center justify-content-xl-between">
         <Col xl="6">
           <div className="copyright text-center text-xl-left text-muted">
@@ -33,7 +33,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              Benno van Dorst
+              Benno van Dorst (Dashboard template by Creative Tim)
             </a>
           </div>
         </Col>

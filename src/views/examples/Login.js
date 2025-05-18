@@ -47,7 +47,7 @@ const Login = () => {
             </div>
             <div className="btn-wrapper text-center">
               <Button
-                  className="btn-neutral btn-icon"
+                  className="btn-neutral btn-icon text-success"
                   color="default"
                   onClick={connect(1)}
               >
@@ -55,7 +55,7 @@ const Login = () => {
                 <span className="btn-inner--text">SimRig 1</span>
               </Button>
               <Button
-                  className="btn-neutral btn-icon"
+                  className="btn-neutral btn-icon text-success"
                   color="default"
                   onClick={connect(2)}
               >

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "reactstrap";
 
@@ -7,35 +7,60 @@ const SimRigWebSocketContext = createContext();
 export const SimRigWebSocketProvider = ({ children }) => {
     const [connected, setConnected] = useState(false);
     const [telemetry, setTelemetry] = useState(null);
+    const [lapData, setLapData] = useState(null);
     const [alert, setAlert] = useState(null);
+    const [currentSimRigId, setCurrentSimRigId] = useState(null);
 
     const socketRef = useRef(null);
     const reconnectStartRef = useRef(null);
     const reconnectTimeoutRef = useRef(null);
+    const currentSimRigIdRef = useRef(null);
+    const manualDisconnectRef = useRef(false);
 
     const navigate = useNavigate();
 
     const connect = (simrigId) => () => {
+        localStorage.setItem("simrigId", simrigId);
+        setCurrentSimRigId(simrigId);
+
+        if (connected && currentSimRigIdRef.current === simrigId) {
+            console.log(`Already connected to SimRig ${simrigId}`);
+            return;
+        }
+
+        manualDisconnectRef.current = false;
         clearTimeout(reconnectTimeoutRef.current);
         reconnectStartRef.current = Date.now();
+
+        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+            console.log("Closing existing WebSocket before connecting to new one...");
+            manualDisconnectRef.current = true;
+            socketRef.current.close();
+        }
+
+        currentSimRigIdRef.current = simrigId;
         createSocket(simrigId);
     };
 
     const createSocket = (simrigId) => {
-        const socket = new WebSocket(`ws://localhost:8080/simrig/${simrigId}`);
+        const socketUrl = `ws://localhost:8080/simrig/${simrigId}`;
+        const socket = new WebSocket(socketUrl);
         socketRef.current = socket;
         window.ws = socket;
 
         socket.onopen = () => {
+            console.log("WebSocket connected to", socketUrl);
             setConnected(true);
             setAlert(null);
-            navigate("/admin/index");
+            navigate("/admin/car-telemetry");
         };
 
-        socket.onerror = () => {
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
             setAlert(
                 <Alert color="danger" className="mt-3">
-                    <strong>Connection Error:</strong> Could not connect to SimRig {simrigId}.
+                    <strong>Connection Error:</strong> Could not connect to SimRig {simrigId}.<br />
+                    Make sure the server is running.
                 </Alert>
             );
         };
@@ -43,25 +68,53 @@ export const SimRigWebSocketProvider = ({ children }) => {
         socket.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data?.telemetry) {
-                    setTelemetry(data.telemetry);
+                console.log("WebSocket message:", data);
+
+                if (data?.type === "carTelemetry" && data?.data) {
+                    const telemetryData = data.data;
+
+                    if (telemetryData?.m_carTelemetryData?.length > 0) {
+                        setTelemetry(telemetryData.m_carTelemetryData[0]);
+                    } else {
+                        setTelemetry(null);
+                    }
+                } else if (data?.type === "lapdata" && data?.data) {
+                    const lapDataPacket = data.data;
+
+                    if (lapDataPacket?.m_lapData?.length > 0) {
+                        setLapData(lapDataPacket.m_lapData[0]);
+                    } else {
+                        setLapData(null);
+                    }
+                } else {
+                    console.warn("Unhandled WebSocket message type:", data?.type);
                 }
+
             } catch (err) {
-                console.error("WebSocket JSON parse error", err);
+                console.error("WebSocket message parse error:", err);
             }
         };
 
         socket.onclose = () => {
             setConnected(false);
+
+            if (manualDisconnectRef.current) {
+                console.log("WebSocket closed manually no reconnection attempt.");
+                manualDisconnectRef.current = false;
+                return;
+            }
+
             const now = Date.now();
             if (reconnectStartRef.current && now - reconnectStartRef.current < 30000) {
+                console.log("Trying to reconnect in 3 seconds...");
                 reconnectTimeoutRef.current = setTimeout(() => {
                     createSocket(simrigId);
                 }, 3000);
             } else {
                 setAlert(
                     <Alert color="danger" className="mt-3">
-                        <strong>Disconnected:</strong> Could not reconnect to SimRig {simrigId}. Refresh to retry.
+                        <strong>Disconnected:</strong> Lost connection to SimRig {simrigId}.<br />
+                        Please refresh the page or check the server.
                     </Alert>
                 );
             }
@@ -69,14 +122,30 @@ export const SimRigWebSocketProvider = ({ children }) => {
     };
 
     const disconnect = () => {
+        clearTimeout(reconnectTimeoutRef.current);
         if (socketRef.current) {
-            clearTimeout(reconnectTimeoutRef.current);
+            manualDisconnectRef.current = true;
             socketRef.current.close();
         }
+        currentSimRigIdRef.current = null;
+        setTelemetry(null);
+        setLapData(null);
+        localStorage.removeItem("simrigId");
+        setCurrentSimRigId(null);
     };
 
+    useEffect(() => {
+        const savedSimRigId = localStorage.getItem("simrigId");
+        if (savedSimRigId) {
+            console.log(`Found saved SimRig ID: ${savedSimRigId}, auto-connecting...`);
+            connect(Number(savedSimRigId))();
+        }
+    }, []);
+
     return (
-        <SimRigWebSocketContext.Provider value={{ connected, connect, disconnect, telemetry, alert }}>
+        <SimRigWebSocketContext.Provider
+            value={{ connected, connect, disconnect, telemetry, lapData, alert, currentSimRigId }}
+        >
             {children}
         </SimRigWebSocketContext.Provider>
     );

@@ -18,7 +18,7 @@
 /*eslint-disable*/
 
 // reactstrap components
-import { NavItem, NavLink, Nav, Container, Row, Col } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 const Login = () => {
   return (
@@ -34,7 +34,7 @@ const Login = () => {
                   href="https://github.com/bennovandorst"
                   target="_blank"
                 >
-                  Benno van Dorst
+                  Benno van Dorst (Dashboard template by Creative Tim)
                 </a>
               </div>
             </Col>
