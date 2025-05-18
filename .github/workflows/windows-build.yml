@@ -2,7 +2,7 @@ name: Build Windows EXE
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_dispatch:
 
 jobs:
@@ -26,15 +26,18 @@ jobs:
 
       - name: Get version from package.json
         id: get_version
-        run: echo "version=v$(node -p \"require('./package.json').version\")" >> $env:GITHUB_OUTPUT
+        run: |
+          $version = (Get-Content -Raw -Path "package.json" | ConvertFrom-Json).version
+          echo "version=v$version" >> $env:GITHUB_OUTPUT
 
       - name: Create GitHub Release
+        id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
           release_name: Release ${{ steps.get_version.outputs.version }}
           draft: false
-          prerelease: false
+          prerelease: ${{ github.ref == 'refs/heads/dev' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -43,5 +46,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: out/make/squirrel.windows/x64/*.exe
-          asset_name: rider-${{ steps.get_version.outputs.version }}.exe
+          asset_name: rider.exe
           asset_content_type: application/vnd.microsoft.portable-executable

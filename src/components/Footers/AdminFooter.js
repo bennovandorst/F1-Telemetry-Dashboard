@@ -19,26 +19,28 @@
 
 // reactstrap components
 import { Row, Col } from "reactstrap";
+import packageJson from "../../../package.json";
 
 const Footer = () => {
   return (
-    <footer className="footer bg-white">
-      <Row className="align-items-center justify-content-xl-between">
-        <Col xl="6">
-          <div className="copyright text-center text-xl-left text-muted">
-            © {new Date().getFullYear()}{" "}
-            <a
-              className="font-weight-bold ml-1"
-              href="https://github.com/bennovandorst"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Benno van Dorst (Dashboard template by Creative Tim)
-            </a>
-          </div>
-        </Col>
-      </Row>
-    </footer>
+      <footer className="footer bg-white">
+        <Row className="align-items-center justify-content-xl-between">
+          <Col xl="6">
+            <div className="copyright text-center text-xl-left text-muted">
+              © {new Date().getFullYear()}{" "}
+              <a
+                  className="font-weight-bold ml-1"
+                  href="https://github.com/bennovandorst"
+                  rel="noopener noreferrer"
+                  target="_blank"
+              >
+                Benno van Dorst
+              </a>{" "}
+              | Rider v{packageJson.version}
+            </div>
+          </Col>
+        </Row>
+      </footer>
   );
 };
 

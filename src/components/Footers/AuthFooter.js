@@ -19,6 +19,7 @@
 
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
+import packageJson from "../../../package.json";
 
 const Login = () => {
   return (
@@ -34,8 +35,9 @@ const Login = () => {
                   href="https://github.com/bennovandorst"
                   target="_blank"
                 >
-                  Benno van Dorst (Dashboard template by Creative Tim)
-                </a>
+                  Benno van Dorst
+                </a>{" "}
+                | Rider v{packageJson.version}
               </div>
             </Col>
           </Row>
