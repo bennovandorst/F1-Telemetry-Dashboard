@@ -30,7 +30,7 @@ const Footer = () => {
               © {new Date().getFullYear()}{" "}
               <a
                   className="font-weight-bold ml-1"
-                  href="https://github.com/bennovandorst"
+                  //href="https://github.com/bennovandorst"
                   rel="noopener noreferrer"
                   target="_blank"
               >
