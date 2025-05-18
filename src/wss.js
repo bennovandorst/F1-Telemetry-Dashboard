@@ -43,7 +43,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
     };
 
     const createSocket = (simrigId) => {
-        const socketUrl = `ws://localhost:8080/simrig/${simrigId}`;
+        const socketUrl = `ws://192.168.178.199:8080/simrig/${simrigId}`;
         const socket = new WebSocket(socketUrl);
         socketRef.current = socket;
         window.ws = socket;
