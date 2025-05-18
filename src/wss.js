@@ -5,6 +5,9 @@ import { Alert } from "reactstrap";
 const SimRigWebSocketContext = createContext();
 
 export const SimRigWebSocketProvider = ({ children }) => {
+    const [wsIP, setWsIP] = useState(localStorage.getItem("wsIP") || "127.0.0.1");
+    const [wsPort, setWsPort] = useState(localStorage.getItem("wsPort") || "8080");
+
     const [connected, setConnected] = useState(false);
     const [telemetry, setTelemetry] = useState(null);
     const [lapData, setLapData] = useState(null);
@@ -43,7 +46,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
     };
 
     const createSocket = (simrigId) => {
-        const socketUrl = `ws://127.0.0.1:8080/simrig/${simrigId}`;
+        const socketUrl = `ws://${wsIP}:${wsPort}/simrig/${simrigId}`;
         const socket = new WebSocket(socketUrl);
         socketRef.current = socket;
         window.ws = socket;
@@ -60,7 +63,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
             setAlert(
                 <Alert color="danger" className="mt-3">
                     <strong>Connection Error:</strong> Could not connect to SimRig {simrigId}.<br />
-                    Make sure the server is running.
+                    Make sure the server is running and the ip/port are correct.
                 </Alert>
             );
         };
@@ -134,6 +137,15 @@ export const SimRigWebSocketProvider = ({ children }) => {
         setCurrentSimRigId(null);
     };
 
+    const updateWsIP = (ip) => {
+        setWsIP(ip);
+        localStorage.setItem("wsIP", ip);
+    };
+    const updateWsPort = (port) => {
+        setWsPort(port);
+        localStorage.setItem("wsPort", port);
+    };
+
     useEffect(() => {
         const savedSimRigId = localStorage.getItem("simrigId");
         if (savedSimRigId) {
@@ -144,7 +156,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
     return (
         <SimRigWebSocketContext.Provider
-            value={{ connected, connect, disconnect, telemetry, lapData, alert, currentSimRigId }}
+            value={{ connected, connect, disconnect, telemetry, lapData, alert, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
         >
             {children}
         </SimRigWebSocketContext.Provider>
