@@ -31,10 +31,10 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import useAuth from "../../wss";
+import {useSimRigWebSocket} from "../../wss";
 
 const Login = () => {
-  const { connected, connect, alert } = useAuth();
+  const { connected, connect, alert } = useSimRigWebSocket();
 
   return (
     <>

@@ -25,15 +25,26 @@ import "assets/scss/argon-dashboard-react.scss";
 
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
+import ProtectedRoute from "./ProtectedRoute";
+import {SimRigWebSocketProvider} from "./wss";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
     <BrowserRouter>
-        <Routes>
-            <Route path="/admin/*" element={<AdminLayout />} />
-            <Route path="/auth/*" element={<AuthLayout />} />
-            <Route path="*" element={<Navigate to="/admin/index" replace />} />
-        </Routes>
+        <SimRigWebSocketProvider>
+            <Routes>
+                <Route path="/auth/*" element={<AuthLayout />} />
+                <Route
+                    path="/admin/*"
+                    element={
+                        <ProtectedRoute>
+                            <AdminLayout />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="*" element={<Navigate to="/auth/login" replace />} />
+            </Routes>
+        </SimRigWebSocketProvider>
     </BrowserRouter>
 );
