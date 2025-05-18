@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, HashRouter } from "react-router-dom";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -31,7 +31,7 @@ import {SimRigWebSocketProvider} from "./wss";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-    <BrowserRouter>
+    <HashRouter>
         <SimRigWebSocketProvider>
             <Routes>
                 <Route path="/auth/*" element={<AuthLayout />} />
@@ -46,5 +46,5 @@ root.render(
                 <Route path="*" element={<Navigate to="/auth/login" replace />} />
             </Routes>
         </SimRigWebSocketProvider>
-    </BrowserRouter>
+    </HashRouter>
 );

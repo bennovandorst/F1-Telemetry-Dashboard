@@ -10,6 +10,8 @@ function createWindow() {
         }
     });
 
+    win.removeMenu();
+
     //win.loadURL('http://localhost:3000'); Development
     win.loadFile(path.join(__dirname, 'build', 'index.html'));
 }
