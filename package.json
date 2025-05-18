@@ -1,8 +1,9 @@
 {
   "name": "argon-dashboard-react",
+  "productName": "Rider",
   "version": "1.2.4",
   "description": "React version of Argon Dashboard by Creative Tim",
-  "main": "index.js",
+  "main": "electron.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/creativetimofficial/argon-dashboard-react.git"
@@ -25,13 +26,18 @@
   "homepage": "https://demos.creative-tim.com/argon-dashboard-react/",
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env PUBLIC_URL=/ react-scripts build",
+    "start:forge": "electron-forge start",
+    "electron": "electron .",
+    "start:electron": "concurrently \"npm start\" \"npm run electron\"",
+    "build": "cross-env PUBLIC_URL=. react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "compile:scss": "sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css",
     "minify:scss": "sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.min.css --style compressed",
-    "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss"
+    "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,6 +54,7 @@
     "bootstrap": "4.6.2",
     "chart.js": "2.9.4",
     "classnames": "2.3.2",
+    "electron-squirrel-startup": "^1.0.1",
     "moment": "2.29.4",
     "nouislider": "15.4.0",
     "react": "18.2.0",
@@ -61,9 +68,19 @@
     "sass": "1.69.5"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.8.1",
+    "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-rpm": "^7.8.1",
+    "@electron-forge/maker-squirrel": "^7.8.1",
+    "@electron-forge/maker-zip": "^7.8.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
+    "@electron-forge/plugin-fuses": "^7.8.1",
+    "@electron/fuses": "^1.8.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^36.2.1",
     "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.9",
-    "cross-env": "^7.0.3"
+    "gulp-append-prepend": "1.0.9"
   },
   "optionalDependencies": {
     "eslint-plugin-flowtype": "8.0.3",
