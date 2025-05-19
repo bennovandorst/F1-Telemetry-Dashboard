@@ -2,7 +2,6 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const { updateElectronApp } = require('update-electron-app')
 
-updateElectronApp()
 
 function createWindow() {
     if (require('electron-squirrel-startup')) app.quit();
@@ -21,6 +20,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    updateElectronApp();
     createWindow();
 
     app.on('activate', function () {
