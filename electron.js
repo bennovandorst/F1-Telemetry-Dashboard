@@ -1,7 +1,11 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const { updateElectronApp } = require('update-electron-app')
+
+updateElectronApp()
 
 function createWindow() {
+    if (require('electron-squirrel-startup')) app.quit();
     const win = new BrowserWindow({
         fullscreen: true,
         webPreferences: {

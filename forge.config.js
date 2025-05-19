@@ -12,7 +12,10 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
+        name: 'rider',
+        icon: path.resolve(__dirname, 'icons/icon.ico'),
         setupIcon: path.resolve(__dirname, 'icons/icon.ico'),
+        loadingGif: path.resolve(__dirname, 'icons/install.gif'),
       },
     },
     {
@@ -51,7 +54,8 @@ module.exports = {
           owner: 'bennovandorst',
           name: 'Rider'
         },
-        prerelease: true,
+        prerelease: false,
+        draft: false,
         authToken: process.env.GITHUB_TOKEN
       }
     }
