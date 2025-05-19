@@ -55,7 +55,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
             console.log("WebSocket connected to", socketUrl);
             setConnected(true);
             setAlert(null);
-            navigate("/admin/car-telemetry");
+            navigate("/admin/index");
         };
 
         socket.onerror = (error) => {

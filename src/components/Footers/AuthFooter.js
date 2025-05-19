@@ -32,7 +32,7 @@ const Login = () => {
                 © {new Date().getFullYear()}{" "}
                 <a
                   className="font-weight-bold ml-1"
-                  href="https://github.com/bennovandorst"
+                  //href="https://github.com/bennovandorst"
                   target="_blank"
                 >
                   Benno van Dorst
