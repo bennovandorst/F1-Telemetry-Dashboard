@@ -48,6 +48,7 @@ const Index = () => {
   const [alerts, setAlerts] = useState([]);
   const [currAlert, setCurrAlert] = useState({ id: "", message: "" });
   const [contributors, setContributors] = useState([]);
+  const { header } = useSimRigWebSocket();
 
   useEffect(() => {
     axios.get("https://api.github.com/repos/bennovandorst/Rider/contributors")
@@ -75,7 +76,54 @@ const Index = () => {
           </Row>
 
           <Row className="mt-5">
-            {/* Staff Online */}
+            {/* Game Info */}
+            <Col>
+              <Card className="shadow">
+                <CardHeader className="bg-transparent">
+                  <h3 className="mb-0">Game Info</h3>
+                </CardHeader>
+                <CardBody>
+                  {header ? (
+                      <Table className="table-flush" responsive>
+                        <tbody>
+                        <tr>
+                          <td><strong>Packet Format</strong></td>
+                          <td>{header.m_packetFormat}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Game Year</strong></td>
+                          <td>{header.m_gameYear}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Game Version</strong></td>
+                          <td>{header.m_gameMajorVersion}.{header.m_gameMinorVersion}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Packet ID</strong></td>
+                          <td>{header.m_packetId}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Packet Version</strong></td>
+                          <td>{header.m_packetVersion}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Player Car Index</strong></td>
+                          <td>{header.m_playerCarIndex}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>Session Time</strong></td>
+                          <td>{header.m_sessionTime.toFixed(2)}</td>
+                        </tr>
+                        </tbody>
+                      </Table>
+                  ) : (
+                      <p>No header data received yet.</p>
+                  )}
+                </CardBody>
+              </Card>
+            </Col>
+
+            {/* Contributors */}
             <Col>
               <Card className="shadow">
                 <CardHeader className="bg-transparent">

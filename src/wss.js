@@ -13,6 +13,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
     const [lapData, setLapData] = useState(null);
     const [alert, setAlert] = useState(null);
     const [currentSimRigId, setCurrentSimRigId] = useState(null);
+    const [header, setHeader] = useState(null);
 
     const socketRef = useRef(null);
     const reconnectStartRef = useRef(null);
@@ -73,24 +74,40 @@ export const SimRigWebSocketProvider = ({ children }) => {
                 const data = JSON.parse(event.data);
                 console.log("WebSocket message:", data);
 
-                if (data?.type === "carTelemetry" && data?.data) {
-                    const telemetryData = data.data;
+                if (!data?.type || !data?.data) return;
 
-                    if (telemetryData?.m_carTelemetryData?.length > 0) {
-                        setTelemetry(telemetryData.m_carTelemetryData[0]);
+                const payload = data.data;
+
+                if (data.type === "carTelemetry") {
+                    const { m_header, m_carTelemetryData } = payload;
+
+                    if (m_header) {
+                        setHeader(m_header);
+                    }
+
+                    if (Array.isArray(m_carTelemetryData) && m_carTelemetryData.length > 0) {
+                        const playerIndex = m_header?.m_playerCarIndex ?? 0;
+                        setTelemetry(m_carTelemetryData[playerIndex]);
                     } else {
                         setTelemetry(null);
                     }
-                } else if (data?.type === "lapdata" && data?.data) {
-                    const lapDataPacket = data.data;
 
-                    if (lapDataPacket?.m_lapData?.length > 0) {
-                        setLapData(lapDataPacket.m_lapData[0]);
+                } else if (data.type === "lapdata") {
+                    const { m_header, m_lapData } = payload;
+
+                    if (m_header) {
+                        setHeader(m_header);
+                    }
+
+                    if (Array.isArray(m_lapData) && m_lapData.length > 0) {
+                        const playerIndex = m_header?.m_playerCarIndex ?? 0;
+                        setLapData(m_lapData[playerIndex]);
                     } else {
                         setLapData(null);
                     }
+
                 } else {
-                    console.warn("Unhandled WebSocket message type:", data?.type);
+                    console.warn("Unhandled WebSocket message type:", data.type);
                 }
 
             } catch (err) {
@@ -156,7 +173,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
     return (
         <SimRigWebSocketContext.Provider
-            value={{ connected, connect, disconnect, telemetry, lapData, alert, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
+            value={{ connected, connect, disconnect, telemetry, lapData, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
         >
             {children}
         </SimRigWebSocketContext.Provider>
