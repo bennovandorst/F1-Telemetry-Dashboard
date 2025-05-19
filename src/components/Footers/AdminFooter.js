@@ -19,7 +19,7 @@
 
 // reactstrap components
 import { Row, Col } from "reactstrap";
-import packageJson from "../../../package.json";
+import riderJson from "../../rider.json";
 
 const Footer = () => {
   return (
@@ -36,7 +36,7 @@ const Footer = () => {
               >
                 Benno van Dorst
               </a>{" "}
-              | Rider v{packageJson.version}
+              | Rider v{riderJson.version}
             </div>
           </Col>
         </Row>

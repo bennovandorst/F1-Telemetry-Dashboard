@@ -19,7 +19,7 @@
 
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
-import packageJson from "../../../package.json";
+import riderJson from "../../rider.json";
 
 const Login = () => {
   return (
@@ -37,7 +37,7 @@ const Login = () => {
                 >
                   Benno van Dorst
                 </a>{" "}
-                | Rider v{packageJson.version}
+                | Rider v{riderJson.version}
               </div>
             </Col>
           </Row>
