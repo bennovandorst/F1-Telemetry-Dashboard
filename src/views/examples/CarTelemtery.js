@@ -22,7 +22,9 @@ const CarTelemetry = () => {
 
     const speedHistory = useTelemetryHistory(telemetry?.m_speed || 0);
     const rpmHistory = useTelemetryHistory(telemetry?.m_engineRPM || 0);
-    const tyresSurfaceTemperature = useTelemetryHistory(telemetry?.m_tyresSurfaceTemperature || 0);
+    const throttleHistory = useTelemetryHistory(telemetry?.m_throttle * 100 || 0);
+    const brakeHistory = useTelemetryHistory(telemetry?.m_brake * 100 || 0);
+    const clutchHistory = useTelemetryHistory(telemetry?.m_clutch || 0);
 
     useEffect(() => {
         parseOptions(Chart, chartOptions());
@@ -41,7 +43,9 @@ const CarTelemetry = () => {
                 <Row>
                     <Col md="4"><TelemetryChart title="Speed Over Time" data={speedHistory} label="Speed (km/h)" /></Col>
                     <Col md="4"><TelemetryChart title="RPM Over Time" data={rpmHistory} label="RPM" /></Col>
-                    <Col md="4"><TelemetryChart title="Tyre Surface Temperature" data={tyresSurfaceTemperature} label="Temperature (°C)" /></Col>
+                    <Col md="4"><TelemetryChart title="Throttle Over Time" data={throttleHistory} label="Throttle (%)" /></Col>
+                    <Col md="4"><TelemetryChart title="Brake Over Time" data={brakeHistory} label="Brake (%)" /></Col>
+                    <Col md="4"><TelemetryChart title="Clutch Over Time" data={clutchHistory} label="Clutch (%)" /></Col>
                 </Row>
             </Container>
         </>
