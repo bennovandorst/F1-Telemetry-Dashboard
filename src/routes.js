@@ -86,7 +86,7 @@ var routes = [
   {
     path: "/login",
     name: "Login",
-    icon: "ni ni-key-25 text-info",
+    icon: "fas fa-sign-in-alt text-green",
     component: <Login />,
     layout: "/auth",
   },

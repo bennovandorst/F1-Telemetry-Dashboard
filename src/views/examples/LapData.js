@@ -19,13 +19,12 @@ const useTelemetryHistory = (value, maxLength = 30) => {
 const LapData = () => {
     const { lapData } = useSimRigWebSocket();
 
-    // Extract lap-related values or default to 0 if missing
     const lapNumber = lapData?.m_currentLapNum ?? 0;
     const currentLapTime = lapData?.m_currentLapTimeInMS ?? 0;
     const lastLapTime = lapData?.m_lastLapTimeInMS ?? 0;
     const sector1Time = lapData?.m_sector1TimeMSPart ?? 0;
     const sector2Time = lapData?.m_sector2TimeMSPart ?? 0;
-    const carPosition = lapData?.m_carPosition ?? "-";
+    const carPosition = lapData?.m_carPosition ?? "--";
     const penalties = lapData?.m_penalties ?? 0;
     const pitStatus = lapData?.m_pitStatus ?? 0;
 
@@ -33,7 +32,6 @@ const LapData = () => {
         parseOptions(Chart, chartOptions());
     }, []);
 
-    // Pit status labels, adjust as needed
     const pitStatusLabels = ["Out", "Pitting", "In Pit"];
 
     return (
