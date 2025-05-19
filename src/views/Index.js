@@ -29,9 +29,12 @@ import {
 import Header from "components/Headers/Header.js";
 import riderJson from "../rider.json";
 import axios from "axios";
+import {useSimRigWebSocket} from "../wss";
 
 const Index = () => {
   const [contributors, setContributors] = useState([]);
+
+  const { header, currentSimRigId } = useSimRigWebSocket();
 
   useEffect(() => {
     axios.get("https://api.github.com/repos/bennovandorst/Rider/contributors")
@@ -53,7 +56,11 @@ const Index = () => {
                 <CardHeader className="bg-transparent">
                   <h3 className="mb-0">Welcome to Rider</h3>
                 </CardHeader>
-                <CardBody>Check the github page for a usage guide.</CardBody>
+                {header && Object.keys(header).length ? (
+                    <CardBody>SimRig {currentSimRigId} is currently running F1® {header?.m_gameYear} version {header?.m_gameMajorVersion}.{header?.m_gameMinorVersion}</CardBody>
+                ) : (
+                    <CardBody>SimRig {currentSimRigId} is not in a session</CardBody>
+                  )}
               </Card>
             </Col>
           </Row>
