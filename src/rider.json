@@ -1,8 +1,9 @@
 {
-  "version": "0.0.1-dev",
+  "version": "0.0.1",
   "updates": [
     "Added dashboard page",
     "Added new telemetry charts",
-    "Fixed minor UI bugs"
+    "Fixed minor UI bugs",
+    "Auto-updater for Windows"
   ]
 }

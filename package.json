@@ -1,7 +1,7 @@
 {
   "name": "rider",
   "productName": "Rider",
-  "version": "0.0.1-dev",
+  "version": "0.0.2",
   "description": "F1 Telemetry Dashboard",
   "main": "electron.js",
   "repository": {
