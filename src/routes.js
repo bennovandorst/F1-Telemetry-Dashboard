@@ -24,6 +24,7 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import CarTelemtery from "./views/examples/CarTelemtery";
 import LapData from "./views/examples/LapData";
+import Corrie from "./views/examples/Corrie";
 
 var routes = [
   {
@@ -45,6 +46,13 @@ var routes = [
     name: "Lap Data",
     icon: "fas fa-flag-checkered text-black",
     component: <LapData />,
+    layout: "/admin",
+  },
+  {
+    path: "/corrie",
+    name: "Corrie",
+    icon: "fas fa-car text-blue",
+    component: <Corrie />,
     layout: "/admin",
   },
   /*

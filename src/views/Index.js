@@ -37,13 +37,45 @@ const Index = () => {
   const { header, currentSimRigId } = useSimRigWebSocket();
 
   useEffect(() => {
-    axios.get("https://api.github.com/repos/bennovandorst/Rider/contributors")
-        .then((res) => {
-          setContributors(res.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    const repos = [
+      "bennovandorst/Rider",
+      "bennovandorst/f1-game-udp-specs"
+    ];
+
+    const excludedUsers = ["bennovandorst-edu", "codegefluester"];
+
+    Promise.all(
+        repos.map(repo =>
+            axios.get(`https://api.github.com/repos/${repo}/contributors`)
+                .then(res => res.data)
+                .catch(() => [])
+        )
+    ).then(async results => {
+      const allContributors = [].concat(...results);
+
+      const filteredContributors = allContributors.filter(
+          contributor => !excludedUsers.includes(contributor.login)
+      );
+
+      const uniqueContributors = Array.from(
+          new Map(filteredContributors.map(c => [c.login, c])).values()
+      );
+
+      const contributorsWithNames = await Promise.all(
+          uniqueContributors.map(async (contributor) => {
+            try {
+              const { data } = await axios.get(`https://api.github.com/users/${contributor.login}`);
+              return { ...contributor, displayName: data.name || contributor.login };
+            } catch {
+              return { ...contributor, displayName: contributor.login };
+            }
+          })
+      );
+
+      setContributors(contributorsWithNames);
+    }).catch(err => {
+      console.error(err);
+    });
   }, []);
 
   return (
