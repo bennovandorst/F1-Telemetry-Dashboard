@@ -25,6 +25,7 @@ import Icons from "views/examples/Icons.js";
 import CarTelemtery from "./views/examples/CarTelemtery";
 import LapData from "./views/examples/LapData";
 import Corrie from "./views/examples/Corrie";
+import CarDamage from "./views/examples/CarDamage";
 
 var routes = [
   {
@@ -39,6 +40,13 @@ var routes = [
     name: "Car Telemetry",
     icon: "fas fa-car text-blue",
     component: <CarTelemtery />,
+    layout: "/admin",
+  },
+  {
+    path: "/car-damage",
+    name: "Car Damage",
+    icon: "fas fa-car-crash text-red",
+    component: <CarDamage />,
     layout: "/admin",
   },
   {

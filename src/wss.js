@@ -11,6 +11,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
     const [connected, setConnected] = useState(false);
     const [telemetry, setTelemetry] = useState(null);
     const [lapData, setLapData] = useState(null);
+    const [carDamage, setCarDamage] = useState(null);
     const [alert, setAlert] = useState(null);
     const [currentSimRigId, setCurrentSimRigId] = useState(null);
     const [header, setHeader] = useState(null);
@@ -183,7 +184,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
     return (
         <SimRigWebSocketContext.Provider
-            value={{ connected, connect, disconnect, telemetry, lapData, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
+            value={{ connected, connect, disconnect, telemetry, lapData, carDamage, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
         >
             {children}
         </SimRigWebSocketContext.Provider>
