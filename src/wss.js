@@ -115,7 +115,9 @@ export const SimRigWebSocketProvider = ({ children }) => {
                     }
                     if (Array.isArray(m_carDamageData) && m_carDamageData.length > 0) {
                         const playerIndex = m_header?.m_playerCarIndex ?? 0;
-                        setTelemetry(prev => ({ ...prev, ...m_carDamageData[playerIndex] }));
+                        setCarDamage(prev => ({ ...prev, ...m_carDamageData[playerIndex] }));
+                    } else {
+                        setCarDamage(null);
                     }
                 } else {
                     console.warn("Unhandled WebSocket message type:", data.type);
@@ -161,6 +163,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
         currentSimRigIdRef.current = null;
         setTelemetry(null);
         setLapData(null);
+        setCarDamage(null);
         localStorage.removeItem("simrigId");
         setCurrentSimRigId(null);
     };
