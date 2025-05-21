@@ -21,7 +21,7 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import { useSimRigWebSocket } from "../../wss";
 
 const Header = () => {
-  const { currentSimRigId, telemetry } = useSimRigWebSocket();
+  const { currentSimRigId, carTelemetry } = useSimRigWebSocket();
 
   const displayGear = (gear) => {
     if (gear === -1) return "R";
@@ -68,7 +68,7 @@ const Header = () => {
                             Speed (km/h)
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                          {telemetry?.m_speed ?? "--"}
+                          {carTelemetry?.m_speed ?? "--"}
                         </span>
                         </div>
                         <Col className="col-auto">
@@ -91,7 +91,7 @@ const Header = () => {
                             Gear
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                          {displayGear(telemetry?.m_gear)}
+                          {displayGear(carTelemetry?.m_gear)}
                         </span>
                         </div>
                         <Col className="col-auto">
@@ -114,7 +114,7 @@ const Header = () => {
                             Engine RPM
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                          {telemetry?.m_engineRPM ?? "--"}
+                          {carTelemetry?.m_engineRPM ?? "--"}
                         </span>
                         </div>
                         <Col className="col-auto">

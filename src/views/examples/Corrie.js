@@ -18,13 +18,13 @@ const useTelemetryHistory = (value, maxLength = 30) => {
 };
 
 const Corrie = () => {
-    const { telemetry } = useSimRigWebSocket();
+    const { carTelemetry } = useSimRigWebSocket();
 
-    const speedHistory = useTelemetryHistory(telemetry?.m_speed || 0);
-    const rpmHistory = useTelemetryHistory(telemetry?.m_engineRPM || 0);
-    const throttleHistory = useTelemetryHistory(telemetry?.m_throttle * 100 || 0);
-    const brakeHistory = useTelemetryHistory(telemetry?.m_brake * 100 || 0);
-    const clutchHistory = useTelemetryHistory(telemetry?.m_clutch || 0);
+    const speedHistory = useTelemetryHistory(carTelemetry?.m_speed || 0);
+    const rpmHistory = useTelemetryHistory(carTelemetry?.m_engineRPM || 0);
+    const throttleHistory = useTelemetryHistory(carTelemetry?.m_throttle * 100 || 0);
+    const brakeHistory = useTelemetryHistory(carTelemetry?.m_brake * 100 || 0);
+    const clutchHistory = useTelemetryHistory(carTelemetry?.m_clutch || 0);
 
     useEffect(() => {
         parseOptions(Chart, chartOptions());
@@ -44,9 +44,9 @@ const Corrie = () => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col md="4"><TelemetryStat title="Throttle" value={(telemetry?.m_throttle * 100).toFixed(0)} unit="%" progress={telemetry?.m_throttle * 100} /></Col>
-                    <Col md="4"><TelemetryStat title="Brake" value={(telemetry?.m_brake * 100).toFixed(0)} unit="%" progress={telemetry?.m_brake * 100} /></Col>
-                    <Col md="4"><TelemetryStat title="Clutch" value={telemetry?.m_clutch} unit="%" progress={telemetry?.m_clutch} /></Col>
+                    <Col md="4"><TelemetryStat title="Throttle" value={(carTelemetry?.m_throttle * 100).toFixed(0)} unit="%" progress={carTelemetry?.m_throttle * 100} /></Col>
+                    <Col md="4"><TelemetryStat title="Brake" value={(carTelemetry?.m_brake * 100).toFixed(0)} unit="%" progress={carTelemetry?.m_brake * 100} /></Col>
+                    <Col md="4"><TelemetryStat title="Clutch" value={carTelemetry?.m_clutch} unit="%" progress={carTelemetry?.m_clutch} /></Col>
                 </Row>
 
                 <Row>

@@ -73,60 +73,59 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
         socket.onmessage = (event) => {
             try {
-                const message = JSON.parse(event.data);
-                console.log("WebSocket message:", message);
+                const data = JSON.parse(event.data);
+                console.log("WebSocket message:", data);
 
-                const { type, data: payload } = message;
+                if (!data?.type || !data?.data) return;
 
-                if (!type || !payload) return;
-
-                const m_header = payload.m_header;
+                const payload = data.data;
+                const { m_header } = payload;
                 const playerIndex = m_header?.m_playerCarIndex ?? 0;
 
                 if (m_header) {
                     setHeader(m_header);
                 }
 
-                const handlers = {
-                    carTelemetry: () => {
-                        const carTelemetry = Array.isArray(payload.m_carTelemetryData)
-                            ? payload.m_carTelemetryData[playerIndex]
-                            : null;
-                        setCarTelemetry(carTelemetry);
-                    },
-                    lapData: () => {
-                        const lapData = Array.isArray(payload.m_lapData)
-                            ? payload.m_lapData[playerIndex]
-                            : null;
-                        setLapData(lapData);
-                    },
-                    carDamage: () => {
-                        const carDamage = Array.isArray(payload.m_carDamageData)
-                            ? payload.m_carDamageData[playerIndex]
-                            : null;
-                        if (carDamage) {
-                            setCarDamage((prev) => ({ ...prev, ...carDamage }));
+                switch (data.type) {
+                    case "carTelemetry":
+                        const { m_carTelemetryData } = payload;
+                        if (Array.isArray(m_carTelemetryData) && m_carTelemetryData.length > 0) {
+                            setCarTelemetry(m_carTelemetryData[playerIndex]);
+                        } else {
+                            setCarTelemetry(null);
+                        }
+                        break;
+
+                    case "lapData":
+                        const { m_lapData } = payload;
+                        if (Array.isArray(m_lapData) && m_lapData.length > 0) {
+                            setLapData(m_lapData[playerIndex]);
+                        } else {
+                            setLapData(null);
+                        }
+                        break;
+
+                    case "carDamage":
+                        const { m_carDamageData } = payload;
+                        if (Array.isArray(m_carDamageData) && m_carDamageData.length > 0) {
+                            setCarDamage(prev => ({ ...prev, ...m_carDamageData[playerIndex] }));
                         } else {
                             setCarDamage(null);
                         }
-                    },
-                    carSetups: () => {
-                        const carSetups = Array.isArray(payload.m_carSetupsData)
-                            ? payload.m_carSetupsData[playerIndex]
-                            : null;
-                        if (carSetups) {
-                            setCarSetups((prev) => ({ ...prev, ...carSetups }));
-                        } else {
-                            setCarSetups(null);
-                        }
-                    },
-                };
+                        break;
 
-                const handler = handlers[type];
-                if (handler) {
-                    handler();
-                } else {
-                    console.warn("Unhandled WebSocket message type:", type);
+                    case "carSetups":
+                        const { m_carSetupsData } = payload;
+                        if (Array.isArray(m_carSetupsData) && m_carSetupsData.length > 0) {
+                            setCarDamage(prev => ({ ...prev, ...m_carSetupsData[playerIndex] }));
+                        } else {
+                            setCarDamage(null);
+                        }
+                        break;
+
+                    default:
+                        console.warn("Unhandled WebSocket message type:", data.type);
+                        break;
                 }
 
             } catch (err) {
