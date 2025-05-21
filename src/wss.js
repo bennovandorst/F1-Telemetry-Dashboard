@@ -12,7 +12,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
     const [carTelemetry, setCarTelemetry] = useState(null);
     const [lapData, setLapData] = useState(null);
     const [carDamage, setCarDamage] = useState(null);
-    const [carSetup, setCarSetup] = useState(null);
+    const [carSetups, setCarSetups] = useState(null);
     const [alert, setAlert] = useState(null);
     const [currentSimRigId, setCurrentSimRigId] = useState(null);
     const [header, setHeader] = useState(null);
@@ -110,8 +110,16 @@ export const SimRigWebSocketProvider = ({ children }) => {
                             setCarDamage(null);
                         }
                     },
-                    // Add new handlers here
-                    // e.g. raceData: () => { ... }
+                    carSetups: () => {
+                        const carSetups = Array.isArray(payload.m_carSetupsData)
+                            ? payload.m_carSetupsData[playerIndex]
+                            : null;
+                        if (carSetups) {
+                            setCarSetups((prev) => ({ ...prev, ...carSetups }));
+                        } else {
+                            setCarSetups(null);
+                        }
+                    },
                 };
 
                 const handler = handlers[type];
@@ -162,7 +170,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
         setCarTelemetry(null);
         setLapData(null);
         setCarDamage(null);
-        setCarSetup(null);
+        setCarSetups(null);
         localStorage.removeItem("simrigId");
         setCurrentSimRigId(null);
     };
@@ -186,7 +194,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
     return (
         <SimRigWebSocketContext.Provider
-            value={{ connected, connect, disconnect, carTelemetry, lapData, carDamage, carSetup, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
+            value={{ connected, connect, disconnect, carTelemetry, lapData, carDamage, carSetups, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
         >
             {children}
         </SimRigWebSocketContext.Provider>
