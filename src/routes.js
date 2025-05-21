@@ -26,6 +26,7 @@ import CarTelemtery from "./views/examples/CarTelemtery";
 import LapData from "./views/examples/LapData";
 import Corrie from "./views/examples/Corrie";
 import CarDamage from "./views/examples/CarDamage";
+import CarSetup from "./views/examples/CarSetup";
 
 var routes = [
   {
@@ -41,6 +42,13 @@ var routes = [
     icon: "fas fa-car text-blue",
     component: <CarTelemtery />,
     layout: "/admin",
+  },
+  {
+    path: "/car-setup",
+    name: "Car Setup",
+    icon: "fas fa-car text-blue",
+    component: <CarSetup />,
+    layout: "/admin"
   },
   {
     path: "/car-damage",

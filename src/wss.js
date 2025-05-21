@@ -9,9 +9,10 @@ export const SimRigWebSocketProvider = ({ children }) => {
     const [wsPort, setWsPort] = useState(localStorage.getItem("wsPort") || "8080");
 
     const [connected, setConnected] = useState(false);
-    const [telemetry, setTelemetry] = useState(null);
+    const [carTelemetry, setCarTelemetry] = useState(null);
     const [lapData, setLapData] = useState(null);
     const [carDamage, setCarDamage] = useState(null);
+    const [carSetup, setCarSetup] = useState(null);
     const [alert, setAlert] = useState(null);
     const [currentSimRigId, setCurrentSimRigId] = useState(null);
     const [header, setHeader] = useState(null);
@@ -72,55 +73,52 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
         socket.onmessage = (event) => {
             try {
-                const data = JSON.parse(event.data);
-                console.log("WebSocket message:", data);
+                const message = JSON.parse(event.data);
+                console.log("WebSocket message:", message);
 
-                if (!data?.type || !data?.data) return;
+                const { type, data: payload } = message;
 
-                const payload = data.data;
+                if (!type || !payload) return;
 
-                if (data.type === "carTelemetry") {
-                    const { m_header, m_carTelemetryData } = payload;
+                const m_header = payload.m_header;
+                const playerIndex = m_header?.m_playerCarIndex ?? 0;
 
-                    if (m_header) {
-                        setHeader(m_header);
-                    }
+                if (m_header) {
+                    setHeader(m_header);
+                }
 
-                    if (Array.isArray(m_carTelemetryData) && m_carTelemetryData.length > 0) {
-                        const playerIndex = m_header?.m_playerCarIndex ?? 0;
-                        setTelemetry(m_carTelemetryData[playerIndex]);
-                    } else {
-                        setTelemetry(null);
-                    }
+                const handlers = {
+                    carTelemetry: () => {
+                        const carTelemetry = Array.isArray(payload.m_carTelemetryData)
+                            ? payload.m_carTelemetryData[playerIndex]
+                            : null;
+                        setCarTelemetry(carTelemetry);
+                    },
+                    lapData: () => {
+                        const lapData = Array.isArray(payload.m_lapData)
+                            ? payload.m_lapData[playerIndex]
+                            : null;
+                        setLapData(lapData);
+                    },
+                    carDamage: () => {
+                        const carDamage = Array.isArray(payload.m_carDamageData)
+                            ? payload.m_carDamageData[playerIndex]
+                            : null;
+                        if (carDamage) {
+                            setCarDamage((prev) => ({ ...prev, ...carDamage }));
+                        } else {
+                            setCarDamage(null);
+                        }
+                    },
+                    // Add new handlers here
+                    // e.g. raceData: () => { ... }
+                };
 
-                } else if (data.type === "lapData") {
-                    const { m_header, m_lapData } = payload;
-
-                    if (m_header) {
-                        setHeader(m_header);
-                    }
-
-                    if (Array.isArray(m_lapData) && m_lapData.length > 0) {
-                        const playerIndex = m_header?.m_playerCarIndex ?? 0;
-                        setLapData(m_lapData[playerIndex]);
-                    } else {
-                        setLapData(null);
-                    }
-
-                } else if (data.type === "carDamage") {
-                    const { m_header, m_carDamageData } = payload;
-
-                    if (m_header) {
-                        setHeader(m_header);
-                    }
-                    if (Array.isArray(m_carDamageData) && m_carDamageData.length > 0) {
-                        const playerIndex = m_header?.m_playerCarIndex ?? 0;
-                        setCarDamage(prev => ({ ...prev, ...m_carDamageData[playerIndex] }));
-                    } else {
-                        setCarDamage(null);
-                    }
+                const handler = handlers[type];
+                if (handler) {
+                    handler();
                 } else {
-                    console.warn("Unhandled WebSocket message type:", data.type);
+                    console.warn("Unhandled WebSocket message type:", type);
                 }
 
             } catch (err) {
@@ -161,9 +159,10 @@ export const SimRigWebSocketProvider = ({ children }) => {
             socketRef.current.close();
         }
         currentSimRigIdRef.current = null;
-        setTelemetry(null);
+        setCarTelemetry(null);
         setLapData(null);
         setCarDamage(null);
+        setCarSetup(null);
         localStorage.removeItem("simrigId");
         setCurrentSimRigId(null);
     };
@@ -187,7 +186,7 @@ export const SimRigWebSocketProvider = ({ children }) => {
 
     return (
         <SimRigWebSocketContext.Provider
-            value={{ connected, connect, disconnect, telemetry, lapData, carDamage, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
+            value={{ connected, connect, disconnect, carTelemetry, lapData, carDamage, carSetup, alert, header, currentSimRigId, wsIP, wsPort, updateWsIP, updateWsPort }}
         >
             {children}
         </SimRigWebSocketContext.Provider>
