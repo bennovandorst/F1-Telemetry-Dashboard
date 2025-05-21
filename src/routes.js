@@ -27,8 +27,16 @@ import LapData from "./views/examples/LapData";
 import Corrie from "./views/examples/Corrie";
 import CarDamage from "./views/examples/CarDamage";
 import CarSetup from "./views/examples/CarSetup";
+import CustomDashboard from "./views/examples/CustomDashboard";
 
 var routes = [
+  {
+    path: "/custom-dashboard",
+    name: "Create Dashboard",
+    icon: "fas fa-plus text-green",
+    component: <CustomDashboard />,
+    layout: "/admin",
+  },
   {
     path: "/index",
     name: "Dashboard",

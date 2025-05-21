@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import {useSimRigWebSocket} from "./wss";
+import { useSimRigWebSocket } from "./wss";
 
 const ProtectedRoute = ({ children }) => {
     const { connected } = useSimRigWebSocket();

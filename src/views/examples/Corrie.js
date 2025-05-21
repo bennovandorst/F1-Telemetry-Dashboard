@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import {Card, CardBody, CardTitle, Container, Row, Col, Progress, CardHeader} from "reactstrap";
-import Header from "components/Headers/Header.js";
 import { useSimRigWebSocket } from "../../wss";
 import { chartOptions, parseOptions } from "variables/charts.js";
 import Chart from "chart.js";
 import TelemetryChart from "../../components/Telemetry/TelemetryChart";
 import TelemetryStat from "../../components/Telemetry/TelemetryStat";
+import SessionRequired from "../../components/SessionRequired";
 
 const useTelemetryHistory = (value, maxLength = 30) => {
     const [data, setData] = useState([]);
@@ -31,8 +31,7 @@ const Corrie = () => {
     }, []);
 
     return (
-        <>
-            <Header />
+        <SessionRequired>
             <Container className="mt-4" fluid>
                 <Row className="mb-4">
                     <Col>
@@ -57,7 +56,7 @@ const Corrie = () => {
                     <Col md="4"><TelemetryChart title="Clutch Over Time" data={clutchHistory} label="Clutch (%)" /></Col>
                 </Row>
             </Container>
-        </>
+        </SessionRequired>
     );
 };
 

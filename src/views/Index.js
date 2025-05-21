@@ -1,22 +1,4 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import {useEffect, useRef, useState} from "react";
-// reactstrap components
 import {
   Card,
   CardHeader,
@@ -24,6 +6,7 @@ import {
   Container,
   Row,
   Col,
+  Badge,
 } from "reactstrap";
 
 import Header from "components/Headers/Header.js";
@@ -33,7 +16,6 @@ import {useSimRigWebSocket} from "../wss";
 
 const Index = () => {
   const [contributors, setContributors] = useState([]);
-
   const { header, currentSimRigId } = useSimRigWebSocket();
 
   useEffect(() => {
@@ -52,15 +34,12 @@ const Index = () => {
         )
     ).then(async results => {
       const allContributors = [].concat(...results);
-
       const filteredContributors = allContributors.filter(
           contributor => !excludedUsers.includes(contributor.login)
       );
-
       const uniqueContributors = Array.from(
           new Map(filteredContributors.map(c => [c.login, c])).values()
       );
-
       const contributorsWithNames = await Promise.all(
           uniqueContributors.map(async (contributor) => {
             try {
@@ -71,7 +50,6 @@ const Index = () => {
             }
           })
       );
-
       setContributors(contributorsWithNames);
     }).catch(err => {
       console.error(err);
@@ -84,64 +62,96 @@ const Index = () => {
         <Container className="mt--7" fluid>
           <Row className="align-items-center">
             <Col>
-              <Card className="shadow">
+              <Card className="shadow border-0">
                 <CardHeader className="bg-transparent">
                   <h3 className="mb-0">Welcome to Rider</h3>
                 </CardHeader>
-                {header && Object.keys(header).length ? (
-                    <CardBody>SimRig {currentSimRigId} is currently running F1® {header?.m_gameYear} version {header?.m_gameMajorVersion}.{header?.m_gameMinorVersion}</CardBody>
-                ) : (
-                    <CardBody>SimRig {currentSimRigId} is not in a session</CardBody>
+                <CardBody className="bg-white">
+                  {header && Object.keys(header).length ? (
+                    <div className="d-flex align-items-center">
+                      <Badge color="success" className="mr-3">Active</Badge>
+                      <div>
+                        <h4 className="mb-1">SimRig {currentSimRigId}</h4>
+                        <p className="text-muted mb-0">
+                          Running F1® {header?.m_gameYear} version {header?.m_gameMajorVersion}.{header?.m_gameMinorVersion}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="d-flex align-items-center">
+                      <Badge color="warning" className="mr-3">Inactive</Badge>
+                      <div>
+                        <h4 className="mb-1">SimRig {currentSimRigId}</h4>
+                        <p className="text-muted mb-0">Not in a session</p>
+                      </div>
+                    </div>
                   )}
+                </CardBody>
               </Card>
             </Col>
           </Row>
 
           <Row className="mt-5">
-            {/* Contributors */}
-            <Col>
-              <Card className="shadow">
+            <Col lg="6">
+              <Card className="shadow border-0 h-100">
                 <CardHeader className="bg-transparent">
                   <h3 className="mb-0">Contributors</h3>
                 </CardHeader>
                 <CardBody>
                   {contributors.length ? (
-                      <ul className="list-unstyled">
-                        {contributors.map((contributor) => (
-                            <li key={contributor.id} className="mb-2 d-flex align-items-center">
-                              <img
-                                  src={contributor.avatar_url}
-                                  alt={contributor.login}
-                                  className="rounded-circle"
-                                  style={{ width: "40px", height: "40px", marginRight: "10px" }}
-                              />
-                              <a target="_blank" rel="noopener noreferrer">
-                                {contributor.login}
-                              </a>
-                            </li>
-                        ))}
-                      </ul>
+                    <div className="contributors-grid">
+                      {contributors.map((contributor) => (
+                        <div key={contributor.id} className="contributor-item d-flex align-items-center p-2">
+                          <img
+                            src={contributor.avatar_url}
+                            alt={contributor.login}
+                            className="rounded-circle shadow-sm"
+                            style={{ width: "48px", height: "48px", marginRight: "15px" }}
+                          />
+                          <div>
+                            <h3 className="mb-0">{contributor.displayName}</h3>
+                            <a >
+                              @{contributor.login}
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
-                      <p>Loading contributors...</p>
+                    <div className="text-center py-4">
+                      <div className="spinner-border text-primary" role="status">
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                      <p className="mt-2 mb-0">Loading contributors...</p>
+                    </div>
                   )}
                 </CardBody>
               </Card>
             </Col>
 
-            {/* Changelog */}
-            <Col>
-              <Card className="shadow">
-                <CardHeader className="bg-transparent">
+            <Col lg="6">
+              <Card className="shadow border-0 h-100">
+                <CardHeader className="transparent">
                   <h3 className="mb-0">Rider Changelog</h3>
                 </CardHeader>
                 <CardBody>
-                  <h1>Version - {riderJson.version}</h1>
-                  <h3>Updates:</h3>
-                  <ul>
-                    {riderJson.updates.length
-                        ? riderJson.updates.map((info, idx) => <li key={idx}>{info}</li>)
-                        : null}
-                  </ul>
+                  <div className="version-badge mb-4">
+                    <Badge color="primary" className="px-3 py-2">
+                      Version {riderJson.version}
+                    </Badge>
+                  </div>
+                  <div className="updates-list">
+                    {riderJson.updates.length ? (
+                      <ul className="list-unstyled">
+                        {riderJson.updates.map((info, idx) => (
+                          <li key={idx} className="mb-3 d-flex align-items-start">
+                            <i className="ni ni-check-bold text-success mr-2 mt-1"></i>
+                            <span>{info}</span>
+                          </li>
+                        ))}
+                      </ul>
+                  ) : null }
+                  </div>
                 </CardBody>
               </Card>
             </Col>
