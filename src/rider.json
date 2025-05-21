@@ -1,9 +1,9 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "updates": [
-    "Added dashboard page",
     "Added new telemetry charts",
     "Fixed minor UI bugs",
-    "Auto-updater for Windows"
+    "Auto-updater for Windows",
+    "Added Car Damage Telemetry"
   ]
 }
