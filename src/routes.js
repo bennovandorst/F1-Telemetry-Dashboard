@@ -46,7 +46,7 @@ var routes = [
   {
     path: "/car-setup",
     name: "Car Setup",
-    icon: "fas fa-car text-blue",
+    icon: "fas fa-wrench text-gray",
     component: <CarSetup />,
     layout: "/admin"
   },
