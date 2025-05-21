@@ -12,7 +12,6 @@ const CarSetup = () => {
         <>
             <Header />
             <Container className="mt-4" fluid>
-                <h3 className="mb-4">Car Setup</h3>
                 <Row>
                     <Col md="3"><TelemetryStat title="Front Wing" value={carSetups?.m_frontWing} unit="" /></Col>
                     <Col md="3"><TelemetryStat title="Rear Wing" value={carSetups?.m_rearWing} unit="" /></Col>
