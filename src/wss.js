@@ -115,9 +115,9 @@ export const SimRigWebSocketProvider = ({ children }) => {
                         break;
 
                     case "carSetups":
-                        const { m_carSetupsData } = payload;
-                        if (Array.isArray(m_carSetupsData) && m_carSetupsData.length > 0) {
-                            setCarSetups(prev => ({ ...prev, ...m_carSetupsData[playerIndex] }));
+                        const { m_carSetups } = payload;
+                        if (Array.isArray(m_carSetups) && m_carSetups.length > 0) {
+                            setCarSetups(prev => ({ ...prev, ...m_carSetups[playerIndex] }));
                         } else {
                             setCarSetups(null);
                         }
